@@ -1,0 +1,45 @@
+networks:
+  event-manager:
+
+services:
+  gateway-service:
+    container_name: gateway-service
+    build: 
+      context: ../gateway-service
+      dockerfile: Dockerfile
+    image: gateway-service
+    ports:
+      - "3000:3000"
+    volumes:
+      - ../gateway-service/:/app
+      - /app/node_modules
+    networks:
+      event-manager:
+        aliases: 
+          - gateway-service
+    depends_on:
+      - postgres
+      # - redis
+
+  postgres:
+    container_name: event-manager-postgres
+    image: postgres
+    restart: always
+    ports:
+      - '5678:5432'
+    environment:
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=event-manager
+    networks:
+      event-manager:
+        aliases: 
+          - postgress
+
+
+  # redis:
+  #   container_name: event-manager-redis
+  #   image: redis:latest
+  #   ports:
+  #     - '6379:6379'
+  #   restart: always
