@@ -5,13 +5,13 @@ services:
   gateway-service:
     container_name: gateway-service
     build: 
-      context: ../gateway-service
+      context: ../em-gateway-service
       dockerfile: Dockerfile
     image: gateway-service
     ports:
       - "3000:3000"
     volumes:
-      - ../gateway-service/:/app
+      - ../em-gateway-service/:/app
       - /app/node_modules
     networks:
       event-manager:
@@ -24,13 +24,13 @@ services:
   events-service:
     container_name: events-service
     build: 
-      context: ../events-service
+      context: ../em-events-service
       dockerfile: Dockerfile
     image: events-service
     ports:
       - "3001:3000"
     volumes:
-      - ../events-service/:/app
+      - ../em-events-service/:/app
       - /app/node_modules
     networks:
       event-manager:
@@ -39,17 +39,18 @@ services:
     depends_on:
       - postgres
       # - redis
+      - gateway-service
 
   fans-service:
     container_name: fans-service
     build: 
-      context: ../fans-service
+      context: ../em-fans-service
       dockerfile: Dockerfile
     image: fans-service
     ports:
       - "3002:3000"
     volumes:
-      - ../fans-service/:/app
+      - ../em-fans-service/:/app
       - /app/node_modules
     networks:
       event-manager:
@@ -58,6 +59,7 @@ services:
     depends_on:
       - postgres
       # - redis
+      - gateway-service
 
   postgres:
     container_name: event-manager-postgres
