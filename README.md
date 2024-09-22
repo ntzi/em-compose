@@ -32,7 +32,9 @@ All services are connected to a Postgres database.\
 All services use JWT authentication for service to service communication.\
 Gateway service also uses JWT authentication for user authentication.
 
-**Gateway service** is the entry point of the system. It is responsible for routing the requests to the appropriate service. It also handles the authentication and authorization of the users. It provides the following endpoints:
+**Gateway service** is the entry point of the system. It is responsible for routing the requests to the appropriate service. It also handles the authentication and authorization of the users.\
+When the service starts, it seeds the database with some data (`startLocal.sh`).\
+It provides the following endpoints:
 - `POST /api/v1/auth/login` to login
 - `POST /api/v1/auth/register` to logout
 - `GET /api/v1/events/:eventId/relevant-fans` to get the relevant fans of an event based on the artists
