@@ -21,6 +21,44 @@ services:
       - postgres
       # - redis
 
+  events-service:
+    container_name: events-service
+    build: 
+      context: ../events-service
+      dockerfile: Dockerfile
+    image: events-service
+    ports:
+      - "3001:3000"
+    volumes:
+      - ../events-service/:/app
+      - /app/node_modules
+    networks:
+      event-manager:
+        aliases: 
+          - events-service
+    depends_on:
+      - postgres
+      # - redis
+
+  fans-service:
+    container_name: fans-service
+    build: 
+      context: ../fans-service
+      dockerfile: Dockerfile
+    image: fans-service
+    ports:
+      - "3002:3000"
+    volumes:
+      - ../fans-service/:/app
+      - /app/node_modules
+    networks:
+      event-manager:
+        aliases: 
+          - fans-service
+    depends_on:
+      - postgres
+      # - redis
+
   postgres:
     container_name: event-manager-postgres
     image: postgres
@@ -34,7 +72,7 @@ services:
     networks:
       event-manager:
         aliases: 
-          - postgress
+          - postgres
 
 
   # redis:
