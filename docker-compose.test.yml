@@ -1,0 +1,77 @@
+networks:
+  event-manager-test:
+
+services:
+  gateway-service-test:
+    container_name: gateway-service-test
+    build: 
+      context: ../em-gateway-service
+      dockerfile: Dockerfile
+    image: gateway-service
+    ports:
+      - "4000:3000"
+    volumes:
+      - ../em-gateway-service/:/app
+      - /app/node_modules
+    command: npm run test:watch
+    networks:
+      event-manager-test:
+        aliases: 
+          - gateway-service-test
+    depends_on:
+      - postgres-test
+
+  events-service-test:
+    container_name: events-service-test
+    build: 
+      context: ../em-events-service
+      dockerfile: Dockerfile
+    image: events-service
+    ports:
+      - "4001:3000"
+    volumes:
+      - ../em-events-service/:/app
+      - /app/node_modules
+    command: npm run test
+    networks:
+      event-manager-test:
+        aliases: 
+          - events-service-test
+    depends_on:
+      - postgres-test
+      - gateway-service-test
+
+  fans-service-test:
+    container_name: fans-service-test
+    build: 
+      context: ../em-fans-service
+      dockerfile: Dockerfile
+    image: fans-service
+    ports:
+      - "4002:3000"
+    volumes:
+      - ../em-fans-service/:/app
+      - /app/node_modules
+    command: npm run test
+    networks:
+      event-manager-test:
+        aliases: 
+          - fans-service-test
+    depends_on:
+      - postgres-test
+      - gateway-service-test
+
+  postgres-test:
+    container_name: event-manager-postgres-test
+    image: postgres
+    restart: always
+    ports:
+      - '5679:5432'
+    environment:
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=event-manager
+    networks:
+      event-manager-test:
+        aliases: 
+          - postgres-test

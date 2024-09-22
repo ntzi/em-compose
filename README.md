@@ -45,3 +45,24 @@ It provides the following endpoints:
 **Fans service** is responsible for managing the fans. It provides the following endpoints:
 - `GET /api/v1/fans/relevant-artists/:artistIds` to get the relevant fans of a list of artists
 
+
+# Test
+- Start test containers
+
+    ```
+    docker compose -f docker-compose.test.yml up -d
+    ```
+
+- Then watch test changes
+    ```
+    docker logs -f gateway-service-test
+    ```
+    For interactive test-watch use 
+    ```
+    npm run test-local:watch
+    ```
+
+- Or get test coverage
+    ```
+    npm run test
+    ```
